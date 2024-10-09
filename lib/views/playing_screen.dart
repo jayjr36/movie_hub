@@ -68,7 +68,7 @@ class _PlayingScreenState extends State<PlayingScreen> {
                 ),
                 child: SizedBox(
                   height: h * 0.29,
-                  child: ListView.builder(
+                  child: ListView.builder(   
                     scrollDirection: Axis.horizontal,
                     itemCount: movies.length,
                     itemBuilder: (context, index) {
