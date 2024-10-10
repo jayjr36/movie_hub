@@ -6,7 +6,7 @@ class ApiList {
   static String upcomingMovies = 'movie/upcoming';
   static String searchMovie = 'search/movie?query=Jack+Reacher';
   static String movieGenre = 'genre/movie/list';
-  static String imageBaseUrl = '';
+  static String filterMovies = 'discover/movie';
   static String videoBaseUrl = '';
   static String trendingMovie = '';
   static String mostPopular = '';

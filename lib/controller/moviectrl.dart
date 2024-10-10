@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:movie_hub/extensions/apis.dart';
+import 'package:movie_hub/models/genre.dart';
 import 'package:movie_hub/models/movie.dart';
 
 class MovieController {
@@ -92,4 +93,44 @@ class MovieController {
       throw Exception('Failed to load upcoming movies');
     }
   }
+
+  Future<List<Genre>> getMovieGenre() async {
+    final response =
+        await http.get(Uri.parse('${ApiList.baseUrl + ApiList.movieGenre}?api_key=${ApiList.apiKey}'));
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      List<Genre> results =
+          (data['genres'] as List).map((json) => Genre.fromJson(json)).toList();
+      return results;
+    } else {
+      print(response.body);
+      throw Exception('Failed to load movies genre');
+    }
+  }
+
+  Future<List<Movie>> fetchMovies({Map<String, String>? filters}) async {
+  final apiKey = ApiList.apiKey; 
+  final baseUrl = ApiList.baseUrl+ApiList.filterMovies;
+
+  final uri = Uri.parse(baseUrl).replace(queryParameters: {
+    'api_key': apiKey,
+    'language': 'en-US',
+    'sort_by': 'popularity.desc',  
+    ...?filters,  
+  });
+
+  final response = await http.get(uri);
+
+  if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+     List<Movie> results = (jsonData['results'] as List)
+          .map((json) => Movie.fromJson(json))
+          .toList();
+  
+    return results; // List of movies
+  } else {
+    throw Exception('Failed to load movies');
+  }
+}
 }

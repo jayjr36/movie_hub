@@ -3,6 +3,7 @@ import 'package:loading_overlay/loading_overlay.dart';
 import 'package:movie_hub/controller/moviectrl.dart';
 import 'package:movie_hub/extensions/constants.dart';
 import 'package:movie_hub/models/movie.dart';
+import 'package:movie_hub/views/movie_details.dart';
 
 class PlayingScreen extends StatefulWidget {
   const PlayingScreen({super.key});
@@ -55,45 +56,65 @@ class _PlayingScreenState extends State<PlayingScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Now Playing in Theaters',
                 style: AppConstant.smallText.copyWith(fontSize: 14),
               ),
-              LoadingOverlay(
-                isLoading: isloading,
-                progressIndicator: const CircularProgressIndicator(
-                  color: Colors.amber,
-                ),
-                child: SizedBox(
-                  height: h * 0.29,
-                  child: ListView.builder(   
+              SizedBox(
+                height: h * 0.29,
+                child: LoadingOverlay(
+                  isLoading: isloading,
+                  progressIndicator: const SizedBox(
+                    height: 30,
+                    width: 30,
+                    child: CircularProgressIndicator(
+                      color: Colors.amber,
+                    ),
+                  ),
+                  child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: movies.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        height: h * 0.25,
-                        margin: const EdgeInsets.all(10),
-                        child: Card(
-                          child: Column(
-                            children: [
-                              Image.network(
-                                'https://image.tmdb.org/t/p/w500${movies[index].posterPath}',
-                                width: h * 0.15,
-                                fit: BoxFit.cover,
-                              ),
-                              Text(
-                                'Ratings ${movies[index].voteAverage.toStringAsFixed(1)}',
-                                overflow: TextOverflow.clip,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.amber,
-                                  fontWeight: FontWeight.bold,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MovieDetails(
+                                      overview: movies[index].overview,
+                                      title: movies[index].title,
+                                      releaseDate: movies[index].releaseDate,
+                                      image:
+                                          'https://image.tmdb.org/t/p/w500${movies[index].posterPath}',
+                                      genre: movies[index].genre)));
+                        },
+                        child: Container(
+                          height: h * 0.25,
+                          margin: const EdgeInsets.all(10),
+                          child: Card(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.network(
+                                  'https://image.tmdb.org/t/p/w500${movies[index].posterPath}',
+                                  width: h * 0.15,
+                                  fit: BoxFit.cover,
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  'Ratings ${movies[index].voteAverage.toStringAsFixed(1)}',
+                                  overflow: TextOverflow.clip,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.amber,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -111,45 +132,68 @@ class _PlayingScreenState extends State<PlayingScreen> {
               SizedBox(
                 height: h * 0.02,
               ),
-              GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 1.2,
-                  mainAxisExtent: h * 0.22,
-                ),
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: topRatedMovies.length,
-                itemBuilder: (context, index) {
-                  return LoadingOverlay(
-                    isLoading: isloading,
-                    progressIndicator: const CircularProgressIndicator(
-                      color: Colors.amber,
-                    ),
-                    child: Container(
-                      height: h * 0.25,
-                      margin: const EdgeInsets.all(3),
-                      child: Card(
-                        child: Column(
-                          children: [
-                            Image.network(
-                              'https://image.tmdb.org/t/p/w500${topRatedMovies[index].posterPath}',
-                              width: h * 0.12,
-                              fit: BoxFit.cover,
-                            ),
-                            Text(
-                              'Ratings ${topRatedMovies[index].voteAverage.toStringAsFixed(1)}',
-                              style: const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+              SizedBox(
+                height: h * 0.5,
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 1.2,
+                    mainAxisExtent: h * 0.22,
+                  ),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: topRatedMovies.length,
+                  itemBuilder: (context, index) {
+                    return LoadingOverlay(
+                      isLoading: isloading,
+                      progressIndicator: const SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: CircularProgressIndicator(
+                          color: Colors.amber,
                         ),
                       ),
-                    ),
-                  );
-                },
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MovieDetails(
+                                      overview: topRatedMovies[index].overview,
+                                      title: topRatedMovies[index].title,
+                                      releaseDate:
+                                          topRatedMovies[index].releaseDate,
+                                      image:
+                                          'https://image.tmdb.org/t/p/w500${topRatedMovies[index].posterPath}',
+                                      genre: topRatedMovies[index].genre)));
+                        },
+                        child: Container(
+                          height: h * 0.25,
+                          margin: const EdgeInsets.all(3),
+                          child: Card(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.network(
+                                  'https://image.tmdb.org/t/p/w500${topRatedMovies[index].posterPath}',
+                                  width: h * 0.12,
+                                  fit: BoxFit.cover,
+                                ),
+                                Text(
+                                  'Ratings ${topRatedMovies[index].voteAverage.toStringAsFixed(1)}',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -158,8 +202,7 @@ class _PlayingScreenState extends State<PlayingScreen> {
     );
   }
 
-  _showDialog(
-      int index, String title, String description, String image){
+  _showDialog(int index, String title, String description, String image) {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,

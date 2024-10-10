@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_hub/views/home_screen.dart';
+import 'package:movie_hub/views/movie_details.dart';
 import 'package:movie_hub/views/playing_screen.dart';
 import 'package:movie_hub/views/search.dart';
 
@@ -16,7 +17,8 @@ class _HomeState extends State<Home> {
   List<Widget> bodyList = [
     const HomeScreen(),
     const PlayingScreen(),
-    const SearchScreen(),
+    const SearchScreen()
+   // const MovieDetails(),
   ];
 
     void onitemTaped(int index) {
